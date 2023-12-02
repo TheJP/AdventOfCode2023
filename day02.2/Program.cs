@@ -1,13 +1,15 @@
 ﻿var input = File.ReadLines(Environment.GetCommandLineArgs()[1]);
 
-int sum = 0;
+long sum = 0;
 foreach (var line in input)
 {
     var parts = line.Split(':');
     int gameId = int.Parse(parts[0][5..]);
     var sets = parts[1].Split(';');
 
-    bool possible = true;
+    long red = 0;
+    long green = 0;
+    long blue = 0;
 
     foreach (var set in sets)
     {
@@ -17,27 +19,23 @@ foreach (var line in input)
             var pair = colour.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries);
             var count = int.Parse(pair[0]);
             var name = pair[1];
-            // Console.WriteLine($"{count} -> {name}");
 
             switch (name)
             {
-                case "red" when count > 12:
-                    possible = false;
+                case "red":
+                    red = Math.Max(red, count);
                     break;
-                case "green" when count > 13:
-                    possible = false;
+                case "green":
+                    green = Math.Max(green, count);
                     break;
-                case "blue" when count > 14:
-                    possible = false;
+                case "blue":
+                    blue = Math.Max(blue, count);
                     break;
             }
         }
     }
 
-    if (possible)
-    {
-        sum += gameId;
-    }
+    sum += red * green * blue;
 }
 
 Console.WriteLine(sum);
